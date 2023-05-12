@@ -11,7 +11,7 @@ variables:
 contexts:
   main:
     - include: core
-    - include: scope:text.html.markdown
+    - include: scope:text.html.markdown#markdown
 
   prototype:
     - include: comments
