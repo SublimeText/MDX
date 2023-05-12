@@ -1,19 +1,51 @@
-# MDX for Sublime
+MDX
+===
 
-[MDX](https://github.com/mdx-js/mdx) syntax highlighting support for `.mdx` files in Sublime Text 3.
+[MDX](https://github.com/mdx-js/mdx) syntax definitions for [Sublime Text](https://www.sublimetext.com).
 
-![image](https://user-images.githubusercontent.com/359871/46480043-fea47980-c7b5-11e8-9dd4-9e39066d22f3.png)
+![](https://user-images.githubusercontent.com/359871/46480043-fea47980-c7b5-11e8-9dd4-9e39066d22f3.png)
 
-### Notes
-- It works but isn’t perfect. I have no idea what I’m doing; and I could use and would appreciate help improving it.
-- `mdx.sublime-syntax` was adapted from [babel-sublime](https://github.com/babel/babel-sublime).
+It works but isn’t perfect.
+
+_MDX.sublime-syntax_ was adapted from [babel-sublime](https://github.com/babel/babel-sublime).
+
+> **Note**
+>
+> This version is no longer maintained.
+>
+> It is shipped for backward compatibility reasons and to respect the original authors efforts.
+>
+> see: https://github.com/jonsuh/mdx-sublime
+>
+> **A fully working MDX syntax definition requires ST4126+.**
 
 ## Installation
 
-1. Download the [latest release](https://github.com/jonsuh/mdx-sublime/archive/master.zip) and extract the ZIP.
-2. Move the directory to Sublime’s `Packages` directory (`Preferences > Browse Packages...`).
+### Package Control
 
-*This package will soon be available through [Package Control](https://packagecontrol.io/installation), [#7312](https://github.com/wbond/package_control_channel/pull/7312).*
+The easiest way to install is using [Package Control](https://packagecontrol.io). It's listed as `MDX`.
+
+1. Open `Command Palette` using <kbd>ctrl+shift+P</kbd> or menu item `Tools → Command Palette...`
+2. Choose `Package Control: Install Package`
+3. Find `MDX` and hit <kbd>Enter</kbd>
+
+### Manual Install
+
+1. Download appropriate [MDX.sublime-package](https://github.com/SublimeText/MDX/releases) for your Sublime Text build.  
+   _A suffix (e.g. `-st4xxx`) denotes the least required ST build for the sublime-package to work._
+2. Rename it to _MDX.sublime-package_
+3. Copy it into _Installed Packages_ directory
+
+> **Note**
+>
+> To find _Installed Packages_...
+>
+> 1. call _Menu > Preferences > Browse Packages.._
+> 2. Navigate to parent folder
+
+> **Warning**
+>
+> Manually installed packages are not automatically updated by Package Control.
 
 ## Usage
 
