@@ -1,24 +1,9 @@
 MDX
 ===
 
-[MDX](https://github.com/mdx-js/mdx) syntax definitions for [Sublime Text](https://www.sublimetext.com).
+[MDX](https://github.com/mdx-js/mdx) syntax definitions for [Sublime Text](https://www.sublimetext.com) based on its HTML, Markdown and JSX syntaxes.
 
-![](https://user-images.githubusercontent.com/359871/46480043-fea47980-c7b5-11e8-9dd4-9e39066d22f3.png)
-
-It works but isn’t perfect.
-
-_MDX.sublime-syntax_ was adapted from [babel-sublime](https://github.com/babel/babel-sublime).
-
-> **Note**
->
-> This version is no longer maintained.
->
-> It is shipped for backward compatibility reasons and to respect the original authors efforts.
->
-> see: https://github.com/jonsuh/mdx-sublime
->
-> **A fully working MDX syntax definition requires ST4126+.**
-
+![](preview.png)
 ## Installation
 
 ### Package Control

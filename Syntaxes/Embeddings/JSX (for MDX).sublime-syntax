@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+# This helper syntax is used to for import/export statements in MDX.
+# It ensures them to get popped off stack if semicolon is missing.
+# http://www.sublimetext.com/docs/syntax.html
+scope: source.jsx.embedded.mdx
+version: 2
+hidden: true
+
+extends: Packages/JavaScript/JSX.sublime-syntax
+
+contexts:
+  expect-semicolon:
+    - meta_append: true
+    - match: $
+      pop: 1
+
+  expression-end:
+    - meta_append: true
+    - match: $
+      pop: 1

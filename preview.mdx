@@ -1,0 +1,52 @@
+---
+author: John Doe
+date: 2023-05-12
+draft: false
+---
+
+import { MDXProvider } from '@mdx-js/tag'
+import { Component } from '../components/base.jsx'
+
+export default ({children}) => (
+	<MDXProvider>
+		<Component
+			prop={true}
+			prop2={`This is a ${template} literal`}
+			// This is an inline comment
+			style={{
+				backgroundColor: "#fff"
+			}}
+			onClick={() => console.log("console log")}
+		>
+			Children {/* This is a comment */}
+		</Component>
+	</MDXProvider>
+)
+
+# Homepage of {frontmatter.author}
+
+Lorem **ipsum** dolor _sit amet_, {consectetur adipisicing} elit, sed do eiusmod
+tempor incididunt ut labore et <strong>dolore</strong> magna aliqua.
+
+## Lists
+
+1. list <b>{item_title(1)}</b>
+2. list <b>{item_title(2)}</b>
+
+## Tables
+
+| Numbers |  Letters  |      $ |
+|---------|:---------:|-------:|
+| One     |    Ayy    |  $1000 |
+| Two     |    Bee    |    $99 |
+
+## Components
+
+<Component />
+
+> Block quotes
+
+[1]: https://github.com/SublimeText "SublimeText Packages"
+
+
+

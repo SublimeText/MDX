@@ -1,0 +1,108 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/syntax.html
+name: MDX
+scope: text.html.markdown.mdx
+version: 2
+
+extends: Packages/MDX/Syntaxes/Embeddings/Markdown (for MDX).sublime-syntax
+
+file_extensions:
+  - mdx
+
+variables:
+
+  #
+  # MDX variables
+  #
+  # The following variables override those from Markdown in order to
+  # 1. be more permissive with regards to leading and intermediate whitespace
+  # 2. rule out html blocks
+  #
+  atx_heading: (?:\s*[#]{1,6}(?:\s|$))                 # between 0 and 3 spaces, followed 1 to 6 hashes, followed by at least one space or tab or by end of the line
+  atx_heading_space: (?:(?=\s+#+\s*$)|\s+|$)           # consume spaces only if heading is not empty to ensure `atx_heading_end` can fully match closing hashes
+  atx_heading_end: (?:\s+(#+))?\s*?($\n?)              # \n is optional so ## is matched as end punctuation in new document (at eof)
+
+  setext_heading_or_paragraph: ^(?:\s*=+|(?=\s*\S))    # any number of spaces, followed by non-whitespace (consume equal signs as paragraphs may start with them)
+  setext_heading_escape: ^(?=\s*(?:=+|-+)\s*$)         # any number of spaces, followed by at least one hyphen or equal sign (setext underline can be of any length)
+  setext_heading1_escape: ^(?=\s*=+\s*$)               # any number of spaces, followed by at least one equal sign (setext underline can be of any length)
+  setext_heading1_end: ^\s*(=+)\s*$(\n?)               # any number of spaces, followed by at least one equal sign (setext underline can be of any length)
+  setext_heading2_end: ^\s*(-+)\s*$(\n?)               # any number of spaces, followed by at least one hyphen (setext underline can be of any length)
+
+  block_quote: (?:\s*(>)[ ]?)                          # any number of spaces, followed by a greater than sign, (followed by any character or the end of the line = "only care about optional space!")
+
+  first_list_item: (?:\s*(?:1[.)]|[*+-])\s)            # any number of spaces, followed by either: at least one integer and a full stop or a parenthesis, or (a star, plus or dash), followed by whitespace
+  list_item: (?:\s*(?:\d{1,9}[.)]|[*+-])\s)            # any number of spaces, followed by either: at least one integer and a full stop or a parenthesis, or (a star, plus or dash), followed by whitespace
+
+  thematic_break: |-
+    (?x:
+      \s*                        # any number of spaces
+      (?:                        # followed by one of the following:
+        [-](?:\s*[-]){2,}        # - a dash,        followed by the following at least twice: any number of spaces or tabs followed by a dash
+      | [*](?:\s*[*]){2,}        # - a star,        followed by the following at least twice: any number of spaces or tabs followed by a star
+      | [_](?:\s*[_]){2,}        # - an underscore, followed by the following at least twice: any number of spaces or tabs followed by an underscore
+      )
+      \s*$                       # followed by any number of tabs or spaces, followed by the end of the line
+    )
+
+  paragraph_end: |-
+    (?x: # pop out of this context if one of the following conditions are met:
+      ^(?=\s*$                        # the line is blank (or only contains whitespace)
+       |  {{block_quote}}             # a blockquote begins the line
+       |  {{atx_heading}}             # an ATX heading begins the line
+       |  {{fenced_code_block_start}} # a fenced codeblock begins the line
+       |  {{thematic_break}}          # line is a thematic beak
+       |  {{first_list_item}}         # a list item begins the line
+       )
+    )
+
+  list_paragraph_end: |-
+    (?x: # pop out of this context if one of the following conditions are met:
+      ^(?= \s*
+        (?: $                           # the line is blank (or only contains whitespace)
+        |   {{block_quote}}             # a blockquote begins the line
+        |   {{atx_heading}}             # an ATX heading begins the line
+        |   {{fenced_code_block_start}} # a fenced codeblock begins the line
+        |   {{thematic_break}}          # line is a thematic beak
+        |   {{list_item}}               # a list item begins the line
+        )
+      )
+    )
+
+contexts:
+
+  prototype:
+    - include: scope:text.html.embedded.mdx#jsx-interpolations
+
+  markdown:
+    - meta_prepend: true
+    - include: jsx-statements
+
+  # MDX doesn't support indented code blocka, yeah!!
+  indented-code-blocks: []
+
+  # Fix missing markup syntax in ST's Markdown
+  atx-heading-content:
+    - meta_append: true
+    - include: markups
+
+  # MDX doesn't support HTML blocks.
+  # Content between block tags may contain markdown.
+  html-blocks: []
+
+  html-content:
+    - include: scope:text.html.embedded.mdx
+
+###[ EXPORT/IMPORT STATEMETNS ]###############################################
+
+  jsx-statements:
+    # MDX export/import statements
+    - match: ^\s*(?=import\b)
+      push: [jsx-meta, scope:source.jsx.embedded.mdx#import-statement]
+    - match: ^\s*(?=export\b)
+      push: [jsx-meta, scope:source.jsx.embedded.mdx#export-statement]
+
+  jsx-meta:
+    - meta_include_prototype: false
+    - meta_scope: source.jsx.embedded.markdown
+    - include: immediately-pop

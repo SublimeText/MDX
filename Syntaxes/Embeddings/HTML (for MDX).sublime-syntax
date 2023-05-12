@@ -1,0 +1,131 @@
+%YAML 1.2
+---
+# This syntax adds JSX interpolation to tags and components for use in MDX.
+# http://www.sublimetext.com/docs/syntax.html
+scope: text.html.embedded.mdx
+version: 2
+hidden: true
+
+extends: Packages/HTML/HTML.sublime-syntax
+
+variables:
+
+  jsx_component_start: |-
+    (?x: [$A-Z_-] | [a-z]{{jsx_component_char}}*\s*[.:] )
+
+  jsx_component_char: '[^.:/?!\s<>=]'
+
+contexts:
+
+  prototype:
+    - meta_prepend: true
+    - include: jsx-interpolations
+
+###[ CUSTOM HTML ]############################################################
+
+  tag-html:
+    # Keep only tags with special attribute handling.
+    # No further distinction of different html tag types desired for MDX.
+    - include: script-tag
+    - include: style-tag
+
+  tag-other:
+    # jsx component tags
+    - include: jsx-components
+    # native html or foreign tags
+    - match: </?(?=[a-z])
+      scope: punctuation.definition.tag.begin.html
+      push:
+        - tag-other-content
+        - tag-other-name
+
+  tag-other-name:
+    - meta_content_scope: entity.name.tag.native.html
+    - match: '{{tag_name_break}}'
+      pop: 1
+
+  tag-other-content:
+    - meta_include_prototype: false
+    - meta_scope: meta.tag.html
+    - include: tag-end-maybe-self-closing
+    - include: tag-attributes
+
+  cdata-content:
+    - meta_include_prototype: false
+    - meta_scope: meta.tag.sgml.cdata.html
+    - meta_content_scope: meta.string.html string.unquoted.cdata.html
+    - match: ']]>'
+      scope: punctuation.definition.tag.end.html
+      pop: 1
+    - include: jsx-string-interpolations
+
+  tag-attribute-value-content:
+    - meta_prepend: true
+    - include: jsx-string-interpolations
+
+  strings-common-content:
+    - meta_prepend: true
+    - include: jsx-string-interpolations
+
+###[ JSX COMPONENTS ]######################################################
+
+  jsx-components:
+    # mimic component scopes from JSX.sublime-syntax to ensure consistency
+    - match: </?(?={{jsx_component_start}})
+      scope: meta.tag.js punctuation.definition.tag.begin.js
+      push:
+        - jsx-tag-content
+        - jsx-component-name
+
+  jsx-component-name:
+    - match: '{{jsx_component_char}}+'
+      scope: entity.name.tag.component.js
+      set: jsx-sub-component-name
+    - include: else-pop
+
+  jsx-sub-component-name:
+    - clear_scopes: 1
+    - meta_scope: meta.tag.name.js
+    - match: '[.:]'
+      scope: punctuation.accessor.js
+      set: jsx-component-name
+    - include: else-pop
+
+  jsx-tag-content:
+    - meta_content_scope: meta.tag.attributes.js
+    - include: tag-attributes
+    - include: jsx-tag-end-maybe-self-closing
+
+  jsx-tag-end-maybe-self-closing:
+    - match: /?>
+      scope: meta.tag.js punctuation.definition.tag.end.js
+      pop: 1
+
+###[ JSX INTERPOLATIONS ]##################################################
+
+  jsx-string-interpolations:
+    - match: \{
+      scope: punctuation.section.interpolation.begin.markdown
+      push: jsx-string-interpolation-body
+
+  jsx-string-interpolation-body:
+    - clear_scopes: 1
+    - meta_include_prototype: false
+    - meta_scope: meta.interpolation.markdown
+    - meta_content_scope: source.jsx.embedded.markdown
+    - include: jsx-interpolation-body
+
+  jsx-interpolations:
+    - match: \{
+      scope: punctuation.section.interpolation.begin.markdown
+      push: jsx-interpolation-body
+
+  jsx-interpolation-body:
+    - meta_include_prototype: false
+    - meta_scope: meta.interpolation.markdown
+    - meta_content_scope: source.jsx.embedded.markdown
+    - match: \}
+      scope: punctuation.section.interpolation.end.markdown
+      pop: 1
+    - include: scope:source.jsx#script
+      apply_prototype: true

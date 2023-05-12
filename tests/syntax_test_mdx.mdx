@@ -1,0 +1,256 @@
+| SYNTAX TEST "Packages/MDX/Syntaxes/MDX.sublime-syntax"
+
+<!--
+ --- export / import statements
+ -->
+
+import Title from '../components/Title.astro'
+| <- meta.import.js keyword.control.import-export.js
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.import.js
+
+export const authors = [
+    { name: 'Jane', email: 'hi@jane.com' },
+    { name: 'John', twitter: '@john2002' },
+]
+| <- meta.export.js meta.sequence.js punctuation.section
+
+export const published = new Date('2022-02-01')
+| <- meta.export.js keyword.control.import-export.js
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.export.js
+
+export default ({children}) => (
+| ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.jsx.embedded.markdown meta.export.js
+|               ^^^^^^^^^^ meta.function.parameters.js meta.binding.destructuring.mapping.js
+    <Foo>
+|   ^ meta.tag punctuation.definition.tag.begin
+|    ^^^ meta.tag entity.name.tag
+|       ^ meta.tag punctuation.definition.tag.end
+        {children}
+|       ^^^^^^^^^^ meta.export.js meta.function.js meta.block.js meta.group.js meta.jsx.js meta.interpolation.js
+    </Foo>
+|   ^^ meta.tag punctuation.definition.tag.begin
+|     ^^^ meta.tag entity.name.tag
+|        ^ meta.tag punctuation.definition.tag.end
+);
+
+JavaScript statements don't interrupt paragraphs,
+export or import are normal words.
+| <- meta.paragraph.markdown - keyword
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown - keyword
+
+Javascript statements must be separated by an empty line.
+
+export const me = null
+| <- source.jsx.embedded.markdown meta.export.js keyword.control.import-export.js
+|^^^^^^^^^^^^^^^^^^^^^^ source.jsx.embedded.markdown meta.export.js
+|^^^^^ keyword.control
+
+
+<!--
+ --- Markdown Headings
+ -->
+
+# A subheading with <Component /> and {name.toString()}
+| <- markup.heading.1.markdown punctuation.definition.heading.begin.markdown
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading.1.markdown - meta.interpolation
+|                   ^ meta.tag - meta.tag.name
+|                    ^^^^^^^^^^ meta.tag.name
+|                              ^^ meta.tag - meta.tag.name - meta.tag.attributes
+|                                     ^^^^^^^^^^^^^^^^^ markup.heading.1.markdown meta.interpolation.markdown
+|                                                      ^ markup.heading.1.markdown meta.whitespace.newline.markdown
+
+      # Also A {Title} #
+| <- markup.heading.1.markdown
+|^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading.1.markdown
+
+The {frontmatter.title}
+| <- markup.heading.1.markdown entity.name.section.markdown
+|^^^ markup.heading.1.markdown - meta.interpolation
+|   ^^^^^^^^^^^^^^^^^^^ markup.heading.1.markdown meta.interpolation.markdown
+|                      ^ markup.heading.1.markdown - meta.interpolation
+===
+
+      A subheading with <Component /> and {name.toString()}
+      |<- markup.heading.2.markdown entity.name.section.markdown
+      |^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading.2.markdown - meta.interpolation
+      |                 ^ meta.tag - meta.tag.name
+      |                  ^^^^^^^^^^ meta.tag.name
+      |                            ^^ meta.tag - meta.tag.name - meta.tag.attributes
+      |                                   ^^^^^^^^^^^^^^^^^ markup.heading.2.markdown meta.interpolation.markdown
+      |                                                    ^ markup.heading.2.markdown - meta.interpolation
+      ---
+
+
+<!--
+ --- Lists
+ -->
+
+1. list <b>{item}</b>
+| <- markup.list.numbered.bullet.markdown
+|^ markup.list.numbered.bullet.markdown punctuation.definition.list_item.markdown
+| ^^^^^^^^^^^^^^^^^^^^ markup.list.numbered.markdown
+|       ^^^ meta.tag
+|          ^^^^^^ meta.interpolation.markdown
+|                ^^^^ meta.tag
+
+
+<!--
+ --- Tables
+ -->
+
+Foo  | Bar
+---  | ---
+| <- meta.table.header-separator.markdown-gfm punctuation.section.table-header.markdown
+|^^^^^^^^^^ meta.table.header-separator.markdown-gfm
+
+Foo  | Bar
+---  | ---
+baz  | zoo
+| <- meta.table.markdown-gfm
+|^^^^^^^^^^ meta.table.markdown-gfm
+
+
+<!--
+ --- Paragraphs
+ -->
+
+This is a single
+<b>paragraph</b>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin
+|^^^^^^^^^^^^^^^^ meta.paragraph.markdown
+
+<p>paragraph</p>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin
+|^^^^^^^^^^^^^^^^ meta.paragraph.markdown
+
+
+<!--
+ --- Markdown is supported within block tags
+ -->
+
+<h1> **plain** {variable} </h1>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin.html
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown
+|^^^ meta.tag
+|    ^^^^^^^^^ markup.bold.markdown
+|              ^^^^^^^^^^ meta.interpolation.markdown
+|                         ^^^^^ meta.tag
+
+<p>
+    Try and change the background _color_ to `tomato`.
+|                                 ^^^^^^^ markup.italic.markdown
+|                                            ^^^^^^^^ markup.raw.inline.markdown
+</p>
+| <- meta.tag
+|^^^ meta.tag
+
+<![CDATA[ This is {interpolated} string ]]>
+| <- meta.paragraph.markdown meta.tag.sgml.cdata.html punctuation.definition.tag.begin.html
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown meta.tag.sgml.cdata.html
+|        ^^^^^^^^^ meta.string.html string.unquoted.cdata.html
+|                 ^^^^^^^^^^^^^^ meta.string.html meta.interpolation.markdown
+|                               ^^^^^^^^ meta.string.html string.unquoted.cdata.html
+
+<!-- JS blocks -->
+<script>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin.html
+|^^^^^^^ meta.paragraph.markdown meta.tag
+    var i = 0;
+|  ^^^^^^^^^^^^ meta.paragraph.markdown source.js.embedded.html
+|   ^^^ keyword.declaration.js
+</script>
+
+<!-- CSS blocks -->
+<style>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin.html
+|^^^^^^ meta.paragraph.markdown meta.tag
+    .class { color: red; }
+|  ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown source.css.embedded.html
+|   ^^^^^^ meta.selector.css
+|          ^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+</style>
+
+<!-- inline CSS/JS -->
+<hr style="color: red" onclick="runClick()">
+| <- meta.paragraph.markdown meta.tag.html punctuation.definition.tag.begin.html
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown meta.tag.html
+|^^ entity.name.tag.native.html
+|   ^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html
+|   ^^^^^ entity.other.attribute-name.style.html
+|        ^ punctuation.separator.key-value.html
+|         ^ meta.string.html string.quoted.double.html punctuation.definition.string.begin.html
+|          ^^^^^^^^^^ meta.string.html meta.interpolation.html source.css.embedded.html
+|                    ^ meta.string.html string.quoted.double.html punctuation.definition.string.end.html
+|                      ^^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.event.html
+|                      ^^^^^^^ entity.other.attribute-name.event.html
+|                             ^ punctuation.separator.key-value.html
+|                              ^ meta.string.html string.quoted.double.html punctuation.definition.string.begin.html
+|                               ^^^^^^^^^^ meta.string.html meta.interpolation.html source.js.embedded.html meta.function-call.js
+|                                         ^ meta.string.html string.quoted.double.html punctuation.definition.string.end.html
+|                                          ^ punctuation.definition.tag.end.html
+
+
+<!--
+ --- Components
+ -->
+
+<Author name={frontmatter.author}/>
+| <- meta.tag punctuation.definition.tag.begin
+|^^^^^^^ meta.tag.name
+|       ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown meta.tag.attributes
+|                                ^^ meta.paragraph.markdown meta.tag - meta.tag.attributes
+|^^^^^^ entity.name.tag.component
+|       ^^^^^ meta.attribute-with-value.html - meta.string - meta.interpolation
+|            ^^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.html meta.string.html meta.interpolation.markdown
+|       ^^^^ entity.other.attribute-name.html
+|           ^ punctuation.separator.key-value.html
+|            ^ punctuation.section.interpolation.begin
+|             ^^^^^^^^^^^^^^^^^^ source.jsx.embedded.markdown
+|                               ^ punctuation.section.interpolation.end.markdown
+|                                ^^ punctuation.definition.tag.end
+
+<foo.bar.Baz name={frontmatter.author}/>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin
+|^^^^^^^^^^^^ meta.paragraph.markdown meta.tag.name
+|            ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.paragraph.markdown meta.tag.attributes meta.attribute-with-value.html
+|                                     ^^ meta.paragraph.markdown meta.tag punctuation.definition.tag.end
+|^^^ entity.name.tag.component
+|   ^ punctuation.accessor
+|    ^^^ entity.name.tag.component
+|       ^ punctuation.accessor
+|        ^^^ entity.name.tag.component
+|            ^^^^ entity.other.attribute-name
+|                ^ punctuation.separator.key-value
+|                 ^^^^^^^^^^^^^^^^^^^^ meta.string.html meta.interpolation.markdown
+
+<!-- JSX interpolation -->
+
+{ <Component /> }
+| <- meta.interpolation.markdown punctuation.section.interpolation.begin.markdown
+|^^^^^^^^^^^^^^^ meta.interpolation.markdown source.jsx.embedded.markdown
+|               ^ meta.interpolation.markdown punctuation.section.interpolation.end.markdown
+| ^ meta.tag punctuation.definition.tag.begin
+|  ^^^^^^^^^^ meta.tag.name
+|            ^^ meta.tag punctuation.definition.tag.end
+
+{ <h1> **plain** {variable} </h1> }
+| <- meta.interpolation.markdown punctuation.section.interpolation.begin.markdown
+|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.interpolation.markdown source.jsx.embedded.markdown
+|                                 ^ meta.interpolation.markdown punctuation.section.interpolation.end.markdown
+| ^^^^ meta.tag
+| ^ punctuation.definition.tag.begin
+|  ^^ entity.name.tag.native
+|    ^ punctuation.definition.tag.end
+|      ^^^^^^^^^ - markup
+|                ^^^^^^^^^^ meta.interpolation
+|                           ^^^^^ meta.tag
+|                           ^^ punctuation.definition.tag.begin
+|                             ^^ entity.name.tag.native
+|                               ^ punctuation.definition.tag.end
+
+<p style={{padding: '1rem', backgroundColor: 'violet'}}>
+| <- meta.paragraph.markdown meta.tag punctuation.definition.tag.begin.html
+|^^ meta.paragraph.markdown meta.tag - meta.attribute-with-value
+|  ^^^^^^ meta.paragraph.markdown meta.tag meta.attribute-with-value.style.html - meta.interpolation
+|        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html meta.interpolation.markdown
+|                                                      ^ meta.paragraph.markdown meta.tag - meta.attribute-with-value - meta.interpolation
