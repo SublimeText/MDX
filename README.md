@@ -36,3 +36,15 @@ The easiest way to install is using [Package Control](https://packagecontrol.io)
 
 1. Open an `.mdx` file
 2. Select `View > Syntax > MDX`
+
+## Troubleshooting
+
+MDX extends Sublime Text's HTML and Markdown syntax definitions.
+
+If MDX syntax highlighting doesn't work and console displays syntax errors in _MDX.sublime-syntax, please make sure to remove any out-dated syntax override.
+
+Steps:
+
+1. call _Menu > Preferences > Browse Packages.._
+2. Look for _HTML_, _Markdown_ and _JavaScript_ folders
+3. Remove them or at least delete any syntax definition in them.
