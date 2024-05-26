@@ -2,15 +2,9 @@ name: CI Syntax Tests
 
 on:
   push:
-    push:
-      - '**'
-    paths:
-      - '.github/workflows/ci-syntax-tests.yml'
-      - '**.sublime-syntax'
-      - '**/syntax_test_*'
-      - '**.tmPreferences'
-  pull_request:
     branches:
+      - '**'
+    tags-ignore:
       - '**'
     paths:
       - '.github/workflows/ci-syntax-tests.yml'
@@ -31,11 +25,9 @@ jobs:
             default_packages: v4126
           - build: 4143
             default_packages: v4143
-          - build: latest # latest available ST build
-            default_packages: master
     steps:
       - name: Checkout Default Packages
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: sublimehq/Packages
           ref: ${{ matrix.default_packages }}
@@ -67,7 +59,7 @@ jobs:
           done
 
       - name: Checkout MDX
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: st_syntax_tests/Data/Packages/MDX
 
