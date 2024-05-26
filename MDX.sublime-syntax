@@ -5,7 +5,7 @@ name: MDX
 scope: text.html.markdown.mdx
 version: 2
 
-extends: Packages/MDX/Syntaxes/Embeddings/Markdown (for MDX).sublime-syntax
+extends: Packages/MDX/Embeddings/Markdown (for MDX).sublime-syntax
 
 file_extensions:
   - mdx
