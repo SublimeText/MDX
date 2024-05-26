@@ -21,14 +21,14 @@ The easiest way to install is using [Package Control](https://packagecontrol.io)
 2. Rename it to _MDX.sublime-package_
 3. Copy it into _Installed Packages_ directory
 
-> **Note**
+> [!NOTE]
 >
 > To find _Installed Packages_...
 >
 > 1. call _Menu > Preferences > Browse Packages.._
 > 2. Navigate to parent folder
 
-> **Warning**
+> [!WARNING]
 >
 > Manually installed packages are not automatically updated by Package Control.
 
