@@ -113,19 +113,50 @@ contexts:
     - meta_include_prototype: false
     - meta_scope: meta.interpolation.markdown
     - meta_content_scope: source.jsx.embedded.markdown
-    - include: jsx-interpolation-body
+    - include: jsx-interpolation-plain-body
 
   jsx-interpolations:
+    - match: (?={/\*)
+      branch_point: jsx-interpolation-comment
+      branch:
+        - jsx-interpolation-comment
+        - jsx-interpolation-plain
+    - match: (?={)
+      push: jsx-interpolation-plain
+
+  jsx-interpolation-comment:
+    - meta_include_prototype: false
+    - match: ({)(/\*)
+      captures:
+        1: punctuation.section.interpolation.begin.markdown
+        2: punctuation.definition.comment.begin.js
+      set: jsx-interpolation-comment-body
+
+  jsx-interpolation-comment-body:
+    - meta_include_prototype: false
+    - meta_scope: meta.interpolation.markdown comment.block.js
+    - match: (\*/)(})
+      captures:
+        1: punctuation.definition.comment.end.js
+        2: punctuation.section.interpolation.end.markdown
+      pop: 1
+    - match: (?=\*/)
+      fail: jsx-interpolation-comment
+
+  jsx-interpolation-plain:
+    - meta_include_prototype: false
     - match: \{
       scope: punctuation.section.interpolation.begin.markdown
-      push: jsx-interpolation-body
+      set: jsx-interpolation-plain-body
 
-  jsx-interpolation-body:
+  jsx-interpolation-plain-body:
     - meta_include_prototype: false
     - meta_scope: meta.interpolation.markdown
     - meta_content_scope: source.jsx.embedded.markdown
     - match: \}
       scope: punctuation.section.interpolation.end.markdown
       pop: 1
-    - include: scope:source.jsx#script
-      apply_prototype: true
+    - match: (?=\S)
+      push:
+        - scope:source.jsx#expression-end
+        - scope:source.jsx#expression-begin
